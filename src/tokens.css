@@ -1,0 +1,121 @@
+/**
+ * Design tokens from Figma: Website — roselanestudio.co
+ * https://www.figma.com/design/CgFEpFm3yrPkQRPVCTDkw4
+ */
+
+:root {
+  /* Colors — variables */
+  --almost-black: #222222;
+  --light-gray: #666666;
+  --white: #ffffff;
+  --faint-gray: #eeeeee;
+  --light-lilac: #edd4ff;
+  --light-lilac-50: rgba(237, 212, 255, 0.5);
+  --dark-lilac: #aa76d0;
+
+  /* Colors — paint styles */
+  --dark-peach: #f66a4e;
+  --light-peach: #fff3ee;
+  --dark-lilac-accent: #7b32b0; /* Figma paint style: Dark Lilac */
+
+  /* Gradients — paint styles */
+  --gradient-holo-radial: conic-gradient(#ffe49d 25%, #ff9a86 65%, #edd4ff 92%);
+  --gradient-holo-linear: linear-gradient(
+    90deg,
+    #ffe49d 0%,
+    #ffb38e 15%,
+    #f8785a 33%,
+    #f66a4e 50%,
+    #f77862 66%,
+    #faa9a5 85%,
+    #edd4ff 100%
+  );
+
+  /* Typography — Body/Body 1 */
+  --body-body-1-font-family: var(--font-dm-sans), sans-serif;
+  --body-body-1-font-size: 24px;
+  --body-body-1-font-weight: 400;
+  --body-body-1-line-height: 1.5;
+
+  /* Typography — Body/Link 1 */
+  --body-link-1-font-family: var(--font-dm-sans), sans-serif;
+  --body-link-1-font-size: 24px;
+  --body-link-1-font-weight: 700;
+  --body-link-1-line-height: 1.5;
+
+  /* Typography — Body/Body 2 */
+  --body-body-2-font-family: var(--font-dm-sans), sans-serif;
+  --body-body-2-font-size: 20px;
+  --body-body-2-font-weight: 400;
+  --body-body-2-line-height: 1.5;
+
+  /* Typography — Body/Body 3 */
+  --body-body-3-font-family: var(--font-dm-sans), sans-serif;
+  --body-body-3-font-size: 16px;
+  --body-body-3-font-weight: 400;
+  --body-body-3-line-height: 1.5;
+
+  /* Typography — Body/Link 2 */
+  --body-link-2-font-family: var(--font-dm-sans), sans-serif;
+  --body-link-2-font-size: 20px;
+  --body-link-2-font-weight: 700;
+  --body-link-2-line-height: 1.5;
+
+  /* Typography — Header/H1 */
+  --header-h1-font-family: var(--font-fraunces), serif;
+  --header-h1-font-size: 48px;
+  --header-h1-font-weight: 700;
+  --header-h1-line-height: 1.25;
+
+  /* Typography — Header/H2 */
+  --header-h2-font-family: var(--font-fraunces), serif;
+  --header-h2-font-size: 32px;
+  --header-h2-font-weight: 700;
+  --header-h2-line-height: 1.25;
+
+  /* Typography — Header/H3 */
+  --header-h3-font-family: var(--font-fraunces), serif;
+  --header-h3-font-size: 28px;
+  --header-h3-font-weight: 700;
+  --header-h3-line-height: 1.25;
+
+  /* Typography — Header/H3 Caps */
+  --header-h3-caps-font-family: var(--font-dm-sans), sans-serif;
+  --header-h3-caps-font-size: 16px;
+  --header-h3-caps-font-weight: 600;
+  --header-h3-caps-line-height: 1.25;
+  --header-h3-caps-letter-spacing: 1px;
+
+  /* Typography — Label/Button 1 */
+  --label-button-1-font-family: var(--font-dm-sans), sans-serif;
+  --label-button-1-font-size: 20px;
+  --label-button-1-font-weight: 900;
+  --label-button-1-line-height: 1;
+
+  /* Typography — Label/Details Sm */
+  --label-details-sm-font-family: var(--font-dm-sans), sans-serif;
+  --label-details-sm-font-size: 14px;
+  --label-details-sm-font-weight: 600;
+  --label-details-sm-line-height: 1.25;
+  --label-details-sm-letter-spacing: 1px;
+
+  /* Spacing — padding */
+  --padding-section-v: 64px;
+  --padding-section-h: 24px;
+  --padding-p: 16px;
+  --padding-p-img: 24px;
+  --padding-text-button: 32px;
+  --padding-text-max-w: 680px;
+  --padding-list: 8px;
+  --padding-img-label: 8px;
+  --padding-tag-small-h: 16px;
+  --padding-tag-small-v: 8px;
+  --padding-card-lg: 48px;
+
+  /* Grid — span widths */
+  --grid-span-3: 270px;
+  --grid-span-4: 368px;
+  --grid-span-7: 662px;
+  --grid-span-8: 760px;
+  --grid-span-10: 955px;
+}
