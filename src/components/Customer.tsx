@@ -1,5 +1,12 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Image from "next/image";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Customer.module.css";
+
+gsap.registerPlugin(ScrollTrigger);
 
 type CustomerCardData = {
   headline: string;
@@ -37,64 +44,147 @@ const cards: CustomerCardData[] = [
   },
 ];
 
-function CustomerCard({ headline, tags, links }: CustomerCardData) {
+const STICKY_BASE_PX = 96;
+const STACK_OFFSET_PX = 22;
+
+type CustomerCardProps = CustomerCardData & {
+  index: number;
+  cardRef: (element: HTMLElement | null) => void;
+};
+
+function CustomerCard({ headline, tags, links, index, cardRef }: CustomerCardProps) {
   return (
-    <article className={styles.card}>
-      <div className={styles.cardTop}>
-        <p className={styles.cardHeadline}>{headline}</p>
-        <ul className={styles.tags} aria-label="Tags">
-          {tags.map((tag) => (
-            <li key={tag} className={styles.tag}>
-              {tag}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className={styles.divider} aria-hidden="true">
-        <Image
-          src="/customer-card-divider.png"
-          alt=""
-          width={664}
-          height={2}
-          className={styles.dividerImage}
-        />
-      </div>
-      <div className={styles.cardBottom}>
-        <p className={styles.needsLabel}>What you need</p>
-        <ul className={styles.links}>
-          {links.map((link) => (
-            <li key={link.label}>
-              <a href={link.href} className={styles.link}>
-                <span>{link.label}</span>
-                <span className={styles.linkArrow} aria-hidden="true">
-                  ↓
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
+    <article
+      ref={cardRef}
+      className={styles.card}
+      data-card
+      style={{ "--card-index": index } as React.CSSProperties}
+    >
+      <div className={styles.cardInner} data-card-inner>
+        <div className={styles.cardTop}>
+          <p className={styles.cardHeadline}>{headline}</p>
+          <ul className={styles.tags} aria-label="Tags">
+            {tags.map((tag) => (
+              <li key={tag} className={styles.tag}>
+                {tag}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className={styles.divider} aria-hidden="true">
+          <Image
+            src="/customer-card-divider.png"
+            alt=""
+            width={664}
+            height={2}
+            className={styles.dividerImage}
+          />
+        </div>
+        <div className={styles.cardBottom}>
+          <p className={styles.needsLabel}>What you need</p>
+          <ul className={styles.links}>
+            {links.map((link) => (
+              <li key={link.label}>
+                <a href={link.href} className={styles.link}>
+                  <span>{link.label}</span>
+                  <span className={styles.linkArrow} aria-hidden="true">
+                    ↓
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </article>
   );
 }
 
 export default function Customer() {
+  const cardGridRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLElement | null)[]>([]);
+
+  useEffect(() => {
+    const grid = cardGridRef.current;
+    if (!grid) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    const cardElements = cardRefs.current.filter(
+      (element): element is HTMLElement => element !== null
+    );
+    if (cardElements.length === 0) return;
+
+    const ctx = gsap.context(() => {
+      cardElements.forEach((card, index) => {
+        const nextCard = cardElements[index + 1];
+        if (!nextCard) return;
+
+        const inner = card.querySelector<HTMLElement>("[data-card-inner]");
+        if (!inner) return;
+
+        const nextStickyTop =
+          STICKY_BASE_PX + (index + 1) * STACK_OFFSET_PX;
+
+        gsap.fromTo(
+          inner,
+          { scale: 1 },
+          {
+            scale: 0.97,
+            ease: "none",
+            scrollTrigger: {
+              trigger: nextCard,
+              start: "top bottom",
+              end: `top ${nextStickyTop}px`,
+              scrub: true,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+      });
+    }, grid);
+
+    const refresh = () => ScrollTrigger.refresh();
+    refresh();
+    window.addEventListener("load", refresh);
+    window.addEventListener("resize", refresh);
+
+    return () => {
+      window.removeEventListener("load", refresh);
+      window.removeEventListener("resize", refresh);
+      ctx.revert();
+    };
+  }, []);
+
   return (
     <section className={styles.customer} aria-labelledby="customer-title">
-      <div className="mx-auto w-full max-w-site px-4 py-10 sm:px-6 sm:py-14 md:py-16">
+      <div
+        className={`mx-auto w-full max-w-site px-4 sm:px-6 ${styles.customerInner}`}
+      >
         <h2 id="customer-title" className={styles.title}>
           You&apos;re in the right place if...
         </h2>
 
         <div className={styles.content}>
           <div className={styles.background} aria-hidden="true">
-            <div className={styles.sphere} />
-            <div className={styles.blur} />
+            <div className={styles.sphereWrap}>
+              <div className={styles.sphere} />
+            </div>
           </div>
 
-          <div className={styles.cardGrid}>
-            {cards.map((card) => (
-              <CustomerCard key={card.headline} {...card} />
+          <div ref={cardGridRef} className={styles.cardGrid}>
+            {cards.map((card, index) => (
+              <CustomerCard
+                key={card.headline}
+                {...card}
+                index={index}
+                cardRef={(element) => {
+                  cardRefs.current[index] = element;
+                }}
+              />
             ))}
           </div>
         </div>

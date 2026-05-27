@@ -19,7 +19,18 @@
   --dark-lilac-accent: #7b32b0; /* Figma paint style: Dark Lilac */
 
   /* Gradients — paint styles */
-  --gradient-holo-radial: conic-gradient(#ffe49d 25%, #ff9a86 65%, #edd4ff 92%);
+  /* Gradient/Holo radial — Figma node 43:94 (angular, from 90deg) */
+  --gradient-holo-radial: conic-gradient(
+    from 90deg at 50% 50%,
+    #edd4ff -7.68%,
+    #f6dcce 8.67%,
+    #ffe49d 25.01%,
+    #ff9a86 65.05%,
+    #f6b7c3 78.69%,
+    #edd4ff 92.32%,
+    #f6dcce 108.67%,
+    #ffe49d 125.01%
+  );
   --gradient-holo-linear: linear-gradient(
     90deg,
     #ffe49d 0%,
