@@ -1,0 +1,281 @@
+/* Figma: Engagements 18:355 — section, Engagement Row 14:2 / 52:172 */
+
+.engagements {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  background-color: var(--light-peach);
+}
+
+.inner {
+  padding-top: var(--padding-section-v);
+  padding-bottom: var(--padding-section-v);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-p-img);
+  width: 100%;
+  max-width: var(--grid-span-10);
+  margin-inline: auto;
+}
+
+.eyebrow {
+  width: 100%;
+  margin: 0;
+  color: var(--dark-peach);
+  font-family: var(--header-h3-caps-font-family);
+  font-size: clamp(0.875rem, 1.5vw, var(--header-h3-caps-font-size));
+  font-weight: var(--header-h3-caps-font-weight);
+  line-height: var(--header-h3-caps-line-height);
+  letter-spacing: var(--header-h3-caps-letter-spacing);
+  text-transform: uppercase;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: 100%;
+  background-color: transparent;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-row-v);
+  width: 100%;
+  padding: var(--padding-row-v) var(--padding-row-h);
+  background-color: var(--white);
+  opacity: 1;
+  transition:
+    opacity var(--engagement-transition-duration) var(--engagement-transition-ease),
+    gap var(--engagement-transition-duration) var(--engagement-transition-ease);
+}
+
+.rowExpanded {
+  padding: var(--padding-row-v) var(--padding-row-h);
+}
+
+/* Figma not-in-focus: entire row (white + copy) at 50% over peach */
+.rowDimmed {
+  opacity: var(--engagement-row-dimmed-opacity);
+}
+
+.rowMain {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-p-img);
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .rowMain {
+    flex-direction: row;
+    gap: var(--padding-row-h);
+    align-items: flex-start;
+  }
+}
+
+.rowTitleCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-p);
+  width: 100%;
+  max-width: var(--grid-span-3);
+  flex-shrink: 0;
+}
+
+.rowTitle {
+  margin: 0;
+  color: var(--almost-black);
+  font-family: var(--header-h3-font-family);
+  font-size: clamp(1.375rem, 3vw, var(--header-h3-font-size));
+  font-weight: var(--header-h3-font-weight);
+  line-height: var(--header-h3-line-height);
+}
+
+.rowSchedule {
+  margin: 0;
+  color: var(--light-gray);
+  font-family: var(--body-body-3-font-family);
+  font-size: clamp(0.9375rem, 1.75vw, var(--body-body-3-font-size));
+  font-weight: var(--body-body-3-font-weight);
+  line-height: var(--body-body-3-line-height);
+}
+
+.rowBodyCol {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.rowDescription {
+  margin: 0;
+  color: var(--almost-black);
+  font-family: var(--body-body-2-font-family);
+  font-size: clamp(1rem, 2.25vw, var(--body-body-2-font-size));
+  font-weight: var(--body-body-2-font-weight);
+  line-height: var(--body-body-2-line-height);
+}
+
+.rowToggleSpacer {
+  width: 100%;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--almost-black);
+  font-family: var(--body-link-2-font-family);
+  font-size: clamp(1rem, 2.25vw, var(--body-link-2-font-size));
+  font-weight: var(--body-link-2-font-weight);
+  line-height: var(--body-link-2-line-height);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.toggle:hover .toggleText {
+  text-decoration: underline;
+}
+
+.toggleStatic {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--padding-img-label);
+  margin: 0;
+  color: var(--almost-black);
+  font-family: var(--body-link-2-font-family);
+  font-size: clamp(1rem, 2.25vw, var(--body-link-2-font-size));
+  font-weight: var(--body-link-2-font-weight);
+  line-height: var(--body-link-2-line-height);
+}
+
+.toggleText {
+  white-space: nowrap;
+}
+
+.toggleIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  color: var(--dark-peach);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  transform: rotate(0deg);
+  transform-origin: center center;
+  transition: transform var(--engagement-transition-duration)
+    var(--engagement-transition-ease);
+}
+
+.toggleIconOpen {
+  transform: rotate(45deg);
+}
+
+.expandPanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--engagement-transition-duration)
+    var(--engagement-transition-ease);
+}
+
+.expandPanelOpen {
+  grid-template-rows: 1fr;
+}
+
+.expandPanelInner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-row-v);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.detailsContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.divider {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  flex-shrink: 0;
+}
+
+.dividerImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detailsIntro,
+.detailsHeading {
+  margin: 0;
+  color: var(--almost-black);
+  font-family: var(--body-body-2-font-family);
+  font-size: clamp(1rem, 2.25vw, var(--body-body-2-font-size));
+  font-weight: var(--body-body-2-font-weight);
+  line-height: var(--body-body-2-line-height);
+}
+
+.detailsIntro {
+  margin-bottom: var(--padding-p);
+}
+
+.detailsHeading {
+  margin-bottom: var(--padding-p);
+}
+
+.detailsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-list);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detailsItem {
+  display: flex;
+  gap: var(--padding-img-label);
+  align-items: flex-start;
+  color: var(--almost-black);
+  font-family: var(--body-body-2-font-family);
+  font-size: clamp(1rem, 2.25vw, var(--body-body-2-font-size));
+  font-weight: var(--body-body-2-font-weight);
+  line-height: var(--body-body-2-line-height);
+}
+
+.bullet {
+  flex-shrink: 0;
+  color: var(--dark-peach);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .toggleIcon,
+  .expandPanel {
+    transition: none;
+  }
+
+  .expandPanel:not(.expandPanelOpen) {
+    display: none;
+  }
+}

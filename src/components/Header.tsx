@@ -1,3 +1,5 @@
+import Link from "next/link";
+import ScrollRevealGroup from "@/components/ScrollRevealGroup";
 import styles from "./Header.module.css";
 
 export default function Header() {
@@ -7,13 +9,16 @@ export default function Header() {
       aria-labelledby="header-headline"
     >
       <div className="mx-auto flex w-full max-w-site flex-col items-center px-4 sm:px-6">
-        <div className="flex w-full flex-col items-center justify-center gap-6 sm:gap-7 md:gap-8 lg:w-10/12 xl:w-8/12">
+        <ScrollRevealGroup
+          playOnMount
+          className="flex w-full flex-col items-center justify-center gap-6 sm:gap-7 md:gap-8 lg:w-10/12 xl:w-8/12"
+        >
           <div className="flex w-full flex-col items-center gap-4 text-center">
-            <h1 id="header-headline" className={styles.headline}>
+            <h1 id="header-headline" className={styles.headline} data-reveal>
               Design leadership that fits your company&apos;s stage, pace, and way
               of building.
             </h1>
-            <p className={styles.subheading}>
+            <p className={styles.subheading} data-reveal>
               Rose Lane Studio is for companies that need experienced design
               leadership{" "}
               <span className={styles.subheadingSuffix}>
@@ -21,13 +26,14 @@ export default function Header() {
               </span>
             </p>
           </div>
-          <a
-            href="#contact"
+          <Link
+            href="/contact"
             className={`${styles.button} w-full sm:w-1/2 lg:w-[48.42%]`}
+            data-reveal
           >
             <span className={styles.buttonLabel}>Get in touch</span>
-          </a>
-        </div>
+          </Link>
+        </ScrollRevealGroup>
       </div>
     </section>
   );

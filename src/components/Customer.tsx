@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import styles from "./Customer.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -101,24 +102,52 @@ function CustomerCard({ headline, tags, links, index, cardRef }: CustomerCardPro
 }
 
 export default function Customer() {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const cardGridRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
 
+  useScrollReveal(sectionRef);
+
   useEffect(() => {
     const grid = cardGridRef.current;
-    if (!grid) return;
+    const content = contentRef.current;
+    if (!grid || !content) return;
 
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-    if (prefersReducedMotion) return;
 
     const cardElements = cardRefs.current.filter(
       (element): element is HTMLElement => element !== null
     );
     if (cardElements.length === 0) return;
 
+    const background = content.querySelector<HTMLElement>(
+      "[data-sphere-background]"
+    );
+    const lastCard = cardElements[cardElements.length - 1];
+    const stackScrollPad = grid.querySelector<HTMLElement>(
+      "[data-stack-scroll-pad]"
+    );
+    const lastStickyTop =
+      STICKY_BASE_PX + (cardElements.length - 1) * STACK_OFFSET_PX;
+
     const ctx = gsap.context(() => {
+      if (!prefersReducedMotion && background) {
+        ScrollTrigger.create({
+          trigger: grid,
+          start: "top top",
+          endTrigger: stackScrollPad ?? lastCard,
+          end: "bottom top",
+          pin: background,
+          pinSpacing: false,
+          invalidateOnRefresh: true,
+        });
+      }
+
+      if (prefersReducedMotion) return;
+
       cardElements.forEach((card, index) => {
         const nextCard = cardElements[index + 1];
         if (!nextCard) return;
@@ -160,16 +189,24 @@ export default function Customer() {
   }, []);
 
   return (
-    <section className={styles.customer} aria-labelledby="customer-title">
+    <section
+      ref={sectionRef}
+      className={styles.customer}
+      aria-labelledby="customer-title"
+    >
       <div
         className={`mx-auto w-full max-w-site px-4 sm:px-6 ${styles.customerInner}`}
       >
-        <h2 id="customer-title" className={styles.title}>
+        <h2 id="customer-title" className={styles.title} data-reveal>
           You&apos;re in the right place if...
         </h2>
 
-        <div className={styles.content}>
-          <div className={styles.background} aria-hidden="true">
+        <div ref={contentRef} className={styles.content}>
+          <div
+            className={styles.background}
+            data-sphere-background
+            aria-hidden="true"
+          >
             <div className={styles.sphereWrap}>
               <div className={styles.sphere} />
             </div>
@@ -186,6 +223,11 @@ export default function Customer() {
                 }}
               />
             ))}
+            <div
+              className={styles.stackScrollPad}
+              data-stack-scroll-pad
+              aria-hidden="true"
+            />
           </div>
         </div>
       </div>

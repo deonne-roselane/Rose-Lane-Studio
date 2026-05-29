@@ -1,0 +1,37 @@
+/* Figma: CTA 18:388 */
+
+.cta {
+  width: 100%;
+  background-color: var(--white);
+}
+
+.inner {
+  padding-top: var(--padding-section-v);
+  padding-bottom: var(--padding-section-v);
+  padding-inline: var(--padding-section-h);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--padding-text-button);
+  width: 100%;
+  max-width: var(--padding-text-max-w);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.headline {
+  width: 100%;
+  margin: 0;
+  color: var(--almost-black);
+  font-family: var(--header-h2-font-family);
+  font-size: clamp(1.5rem, 4vw, var(--header-h2-font-size));
+  font-weight: var(--header-h2-font-weight);
+  line-height: 1.1;
+}
+
+.button {
+  width: min(100%, var(--grid-span-4));
+}

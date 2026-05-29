@@ -1,4 +1,6 @@
 .customer {
+  position: relative;
+  z-index: 0;
   width: 100%;
   overflow: visible;
 }
@@ -9,20 +11,18 @@
 
 .customerInner {
   padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
+  padding-bottom: 0;
 }
 
 @media (min-width: 640px) {
   .customerInner {
     padding-top: 3rem;
-    padding-bottom: 3.5rem;
   }
 }
 
 @media (min-width: 768px) {
   .customerInner {
     padding-top: 3.5rem;
-    padding-bottom: 4rem;
   }
 }
 
@@ -59,8 +59,7 @@
  * Title (z-index 2 + solid bg) stays crisp above this layer.
  */
 .background {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 0;
   grid-area: 1 / 1;
   width: min(1000px, 100%);
@@ -128,6 +127,7 @@
 .cardGrid {
   --customer-sticky-base: 96px;
   --customer-stack-offset: 22px;
+  --customer-stack-scroll: min(18vh, 8rem);
 
   position: relative;
   z-index: 1;
@@ -139,7 +139,7 @@
   max-width: var(--grid-span-8);
   margin: 0 auto;
   padding-top: 24px;
-  padding-bottom: min(55vh, 30rem);
+  padding-bottom: var(--padding-section-v);
   justify-self: center;
 }
 
@@ -155,7 +155,7 @@
   );
   z-index: calc(var(--card-index, 0) + 1);
   width: 100%;
-  margin-bottom: min(18vh, 8rem);
+  margin-bottom: var(--customer-stack-scroll);
   border: 1px solid var(--faint-gray);
   border-radius: 4px;
   background: var(--white);
@@ -163,7 +163,15 @@
 }
 
 .card:last-child {
-  margin-bottom: min(18vh, 8rem);
+  margin-bottom: 0;
+}
+
+/* Scroll runway so card 4 can reach its sticky offset before the grid ends */
+.stackScrollPad {
+  flex-shrink: 0;
+  width: 100%;
+  height: var(--customer-stack-scroll);
+  pointer-events: none;
 }
 
 .cardInner {

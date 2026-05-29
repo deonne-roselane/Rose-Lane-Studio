@@ -1,5 +1,7 @@
 import About from "@/components/About";
 import Customer from "@/components/Customer";
+import Cta from "@/components/Cta";
+import Engagements from "@/components/Engagements";
 import Header from "@/components/Header";
 import Nav from "@/components/Nav";
 
@@ -36,8 +38,8 @@ export default function Home() {
         <Header />
         <About />
         <Customer />
-        {/* Engagements */}
-        {/* CTA */}
+        <Engagements />
+        <Cta />
       </main>
     </>
   );

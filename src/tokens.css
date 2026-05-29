@@ -17,6 +17,10 @@
   --dark-peach: #f66a4e;
   --light-peach: #fff3ee;
   --dark-lilac-accent: #7b32b0; /* Figma paint style: Dark Lilac */
+  --error-red: #bc1f00;
+  --placeholder-gray: #9e9e9e;
+  --input-border: #d1d1d1;
+  --focus-border: #ffe49d;
 
   /* Gradients — paint styles */
   /* Gradient/Holo radial — Figma node 43:94 (angular, from 90deg) */
@@ -111,8 +115,14 @@
   --label-details-sm-letter-spacing: 1px;
 
   /* Spacing — padding */
-  --padding-section-v: 64px;
+  --padding-section-v: 48px;
   --padding-section-h: 24px;
+  --padding-row-h: 32px;
+  --padding-row-v: 32px;
+  /* Engagement row — not-in-focus (Figma opacity-50 on row) */
+  --engagement-row-dimmed-opacity: 0.5;
+  --engagement-transition-duration: 0.4s;
+  --engagement-transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
   --padding-p: 16px;
   --padding-p-img: 24px;
   --padding-text-button: 32px;
