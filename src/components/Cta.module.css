@@ -6,8 +6,8 @@
 }
 
 .inner {
-  padding-top: var(--padding-section-v);
-  padding-bottom: var(--padding-section-v);
+  padding-top: 144px;
+  padding-bottom: 144px;
   padding-inline: var(--padding-section-h);
 }
 

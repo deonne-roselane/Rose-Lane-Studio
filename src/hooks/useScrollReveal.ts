@@ -2,15 +2,23 @@
 
 import { type RefObject, useEffect } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const REVEAL_OFFSET_Y = 24;
 const REVEAL_DURATION = 0.6;
 const REVEAL_EASE = "power2.out";
 const DEFAULT_STAGGER = 0.1;
-const DEFAULT_START = "top 82%";
+const FALLBACK_MS = 2500;
+
+function markRevealed(targets: HTMLElement[]) {
+  targets.forEach((el) => {
+    el.setAttribute("data-revealed", "true");
+  });
+}
+
+function revealInstant(targets: HTMLElement[]) {
+  gsap.set(targets, { y: 0, opacity: 1, clearProps: "transform,opacity" });
+  markRevealed(targets);
+}
 
 export function useScrollReveal(
   containerRef: RefObject<HTMLElement | null>,
@@ -22,7 +30,6 @@ export function useScrollReveal(
   }
 ) {
   const stagger = options?.stagger ?? DEFAULT_STAGGER;
-  const start = options?.start ?? DEFAULT_START;
   const playOnMount = options?.playOnMount ?? false;
 
   useEffect(() => {
@@ -30,7 +37,7 @@ export function useScrollReveal(
     if (!container) return;
 
     const targets = gsap.utils.toArray<HTMLElement>(
-      container.querySelectorAll("[data-reveal]")
+      container.querySelectorAll("[data-reveal]:not([data-revealed])")
     );
     if (targets.length === 0) return;
 
@@ -39,39 +46,115 @@ export function useScrollReveal(
     ).matches;
 
     if (prefersReducedMotion) {
-      gsap.set(targets, { y: 0, opacity: 1, clearProps: "transform,opacity" });
+      revealInstant(targets);
       return;
     }
 
-    const ctx = gsap.context(() => {
-      gsap.set(targets, { y: REVEAL_OFFSET_Y, opacity: 0 });
+    let cancelled = false;
+    let fallbackTimer: number | undefined;
 
-      gsap.to(targets, {
-        y: 0,
-        opacity: 1,
-        duration: REVEAL_DURATION,
-        ease: REVEAL_EASE,
-        stagger,
-        ...(playOnMount
-          ? {}
-          : {
-              scrollTrigger: {
-                trigger: container,
-                start,
-                once: true,
-                invalidateOnRefresh: true,
-              },
-            }),
+    const finishReveal = () => {
+      if (fallbackTimer !== undefined) {
+        window.clearTimeout(fallbackTimer);
+        fallbackTimer = undefined;
+      }
+    };
+
+    const animateReveal = () => {
+      if (cancelled) return;
+
+      gsap.fromTo(
+        targets,
+        { y: REVEAL_OFFSET_Y, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: REVEAL_DURATION,
+          ease: REVEAL_EASE,
+          stagger,
+          onComplete: () => {
+            gsap.set(targets, { clearProps: "transform,opacity" });
+            markRevealed(targets);
+            finishReveal();
+          },
+        }
+      );
+    };
+
+    fallbackTimer = window.setTimeout(() => {
+      if (cancelled) return;
+      revealInstant(targets);
+      finishReveal();
+    }, FALLBACK_MS);
+
+    const runReveal = () => {
+      // Double rAF helps iOS Safari finish layout before animating.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          animateReveal();
+        });
       });
-    }, container);
+    };
 
-    const refresh = () => ScrollTrigger.refresh();
-    refresh();
-    window.addEventListener("load", refresh);
+    if (playOnMount) {
+      runReveal();
+      return () => {
+        cancelled = true;
+        finishReveal();
+        gsap.killTweensOf(targets);
+      };
+    }
+
+    let revealed = false;
+
+    const triggerReveal = () => {
+      if (revealed || cancelled) return;
+      revealed = true;
+      observer.disconnect();
+      runReveal();
+    };
+
+    const isInViewport = () => {
+      const rect = container.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      return rect.top < vh && rect.bottom > 0;
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        triggerReveal();
+      },
+      {
+        root: null,
+        // No negative bottom inset — that prevented footer CTAs from ever intersecting
+        // when scrolled to the end of the page (production / mobile).
+        rootMargin: "0px 0px 0px 0px",
+        threshold: 0,
+      }
+    );
+
+    observer.observe(container);
+
+    if (isInViewport()) {
+      triggerReveal();
+    }
+
+    const onResize = () => {
+      if (!revealed && isInViewport()) {
+        triggerReveal();
+      }
+    };
+    window.addEventListener("resize", onResize);
+    window.addEventListener("load", onResize);
 
     return () => {
-      window.removeEventListener("load", refresh);
-      ctx.revert();
+      cancelled = true;
+      finishReveal();
+      observer.disconnect();
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("load", onResize);
+      gsap.killTweensOf(targets);
     };
-  }, [containerRef, stagger, start, playOnMount]);
+  }, [containerRef, stagger, playOnMount]);
 }

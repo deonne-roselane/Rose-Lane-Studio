@@ -9,6 +9,14 @@ import styles from "./Customer.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const isTouchDevice =
+  typeof window !== "undefined" &&
+  ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+
+if (isTouchDevice) {
+  ScrollTrigger.normalizeScroll(true);
+}
+
 type CustomerCardData = {
   headline: string;
   tags: string[];
